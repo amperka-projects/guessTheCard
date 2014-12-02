@@ -5,13 +5,13 @@
   * Платформы: Arduino Uno
   * Языки программирования: [[wp>Wiring_(development_platform) | Wiring (C++)]]
   * Проект на [[wpru>GitHub]]: http://github.com/amperka-projects/guessTheCard
-  * Тэги: распознование речи, голосовое управление
+  * Тэги: распознование речи, голосовое управление, easyvr
 
 ===== Что это такое? =====
 
 В этой статье мы расскажем о том, как можно реализовать голосовое  управление
 для своего проекта. Вы сможете говорить роботу, куда ему двигаться,
-включать/выключать свет, собрать замок, отпирающийчя только на ваш голос, или
+включать/выключать свет, собрать замок, отпирающийся только на ваш голос, или
 голосовой тир для тренировки произношения иностранных слов. Разумеется
 реализовать распознавание голоса у новичка самостоятельно не получится. Но есть
 готовое решение. Мы покажем, как пользоваться этим решением, на примере
@@ -21,33 +21,44 @@
 карточку на несколько секунд, как только правильно было произнесено написанное
 на ней слово.
 
-В качестве упомянутого готового решения мы возьмём плату EasyVR, которая
-предоставляет простой интерфейс к сложно реализуемым функциям распознавания
-голоса.
+В качестве упомянутого готового решения мы возьмём плату
+[[http://www.veear.eu/products/easyvr-arduino-shield/|EasyVR 2.0 Shield]],
+которая предоставляет простой интерфейс к сложно реализуемым функциям
+распознавания голоса.
 
 ===== Что для этого необходимо? =====
 
 {{ :projects:vr_collage.jpg?direct&700 }}
 
 Для изготовления тира с тремя карточками нам понадобятся:
-  - [[amp>product/arduino-uno|Arduino Uno]]
-  - [[amp>product/easyvr-shield|EasyVR-шилд]]
-  - [[amp>product/arduino-troyka-shield|Troyka-шилд]]
-  - [[amp>product/servo-fs90|Микросервопривод FS90 ×3 шт]]
+  - [[amp>product/arduino-uno?utm_source=proj&utm_campaign=guessthecard&utm_medium=wiki|Arduino Uno]]
+  - [[amp>product/easyvr-shield?utm_source=proj&utm_campaign=guessthecard&utm_medium=wiki|EasyVR-шилд]]
+  - [[amp>product/arduino-troyka-shield?utm_source=proj&utm_campaign=guessthecard&utm_medium=wiki|Troyka-шилд]]
+  - [[amp>product/servo-fs90?utm_source=proj&utm_campaign=guessthecard&utm_medium=wiki|Микросервопривод FS90 ×3 шт]]
+  - [[amp>product/usb-power-plug?utm_source=proj&utm_campaign=guessthecard&utm_medium=wiki|Блок питания с USB разъёмом]]
+  - [[amp>product/usb-cable?utm_source=proj&utm_campaign=guessthecard&utm_medium=wiki|USB кабель]]
   - Карточки с изображениями или словами ×3 шт
 
 ===== Как это собрать? =====
- {{ :projects:vr_build_1.jpg?direct&700 }}
 
-  - Мы будем использовать плату Arduino Uno как переходник USB→UART для начальной настройки EasyVR. Извлеките микросхему из платы Arduino Uno, чтобы она не вклинивалась в канал UART.
+{{ :projects:vr_build_1.jpg?direct&700 }}
+
+  - Мы будем использовать плату Arduino Uno как переходник USB→UART для начальной настройки EasyVR. Извлеките микросхему ATmega из платы Arduino Uno, чтобы она не вклинивалась в канал UART.<WRAP center round box 90%>
+{{:продукты:magic-fogg.png?nolink |}}**//Внимание!//**
+
+При извлечении микросхемы убедитесь, что питание платы отключено.
+
+</WRAP>
   - Установите на Arduino Uno шилд EasyVR.
   - Установите перемычку на EasyVR в положение ''PC''.
-  - Установите программу [[http://www.veear.eu/downloads/|EasyVR Commander]], подключите Arduino Uno к компьютеру.
-  - Создайте три команды и обучите их.
-  - Временно снимите EasyVR-шилд, поставьте обратно микросхему на Arduino Uno и снова установите EasyVR.
+  - Установите программу [[http://www.veear.eu/downloads/|EasyVR Commander]], подключите Arduino Uno к компьютеру при помощи [[amp>product/usb-cable&utm_campaign=guessthecard&utm_medium=wiki|USB-кабеля]].
+  - Создайте три команды и обучите их. {{ :projects:vr_build_2.png?direct&700 }}
+  - Временно снимите EasyVR-шилд, поставьте обратно микросхему на Arduino Uno.
+  - Скачайте библиотеку [[http://www.veear.eu/downloads/|EasyVR Arduino Library]]. В Arduino IDE [[программирование:библиотеки|добавьте бибилотеку]], выбрав скачанный zip-архив (распаковывать его не нужно).
+  - [[arduino-быстрый-старт:start|Прошейте Arduino]] скетчем, приведённым ниже, и снова установите на неё EasyVR.
   - Установите перемычку на EasyVR в положение ''HW''.
-  - Установите на Easy VR плату Тройка-шилд. {{ :projects:vr_build_2.jpg?direct&700 }}
-  - Подключите сервоприводы к тройка-шилду. {{ :projects:vr_build_3.jpg?direct&700 }}
+  - Установите на EasyVR плату Тройка-шилд. {{ :projects:vr_build_3.jpg?direct&700 }}
+  - Подключите сервоприводы к тройка-шилду, закрепите карточки на сервоприводах при помощи скрепок или проволоки. Установите сервоприводы так, чтобы в исходном положении карточки стояли. {{ :projects:vr_build_4.jpg?direct&700 }}
   - Подключите питание.
 
 ===== Исходный код =====
@@ -57,7 +68,7 @@
 
 ===== Демонстрация работы устройства =====
 
-{{youtube>R7ILpfYvDNc?large}}
+{{youtube>h4P38uZoqLs?large}}
 
 ===== Что ещё можно сделать с EasyVR? =====
 
